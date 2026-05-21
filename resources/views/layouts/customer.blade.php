@@ -61,26 +61,23 @@
                 <x-theme-toggle />
 
                 <!-- User dropdown -->
-                <div class="relative pl-2 border-l border-gray-200 dark:border-gray-700" x-data="{ open: false }">
-                    <button @click="open = !open" @click.outside="open = false"
+                <div class="relative pl-2 border-l border-gray-200 dark:border-gray-700" id="user-dropdown-wrapper">
+                    <button onclick="toggleUserDropdown()"
+                        id="user-dropdown-btn"
                         class="flex items-center gap-2 rounded-lg px-2 py-1.5 hover:bg-gray-100 dark:hover:bg-gray-800 transition">
                         <div class="w-8 h-8 rounded-full bg-sky-100 dark:bg-sky-500/20 border border-sky-200 dark:border-sky-500/30 flex items-center justify-center flex-shrink-0">
                             <span class="text-sky-600 dark:text-sky-400 text-xs font-bold">{{ strtoupper(substr(auth()->user()->username, 0, 2)) }}</span>
                         </div>
                         <span class="hidden md:block text-sm font-medium text-gray-700 dark:text-gray-300">{{ auth()->user()->username }}</span>
-                        <svg class="w-4 h-4 text-gray-400 transition-transform duration-200" :class="open ? 'rotate-180' : ''"
+                        <svg id="user-dropdown-chevron" class="w-4 h-4 text-gray-400 transition-transform duration-200"
                             fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
                         </svg>
                     </button>
 
                     <!-- Dropdown panel -->
-                    <div x-show="open" x-transition:enter="transition ease-out duration-100"
-                        x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
-                        x-transition:leave="transition ease-in duration-75"
-                        x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95"
-                        class="absolute right-0 mt-2 w-52 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg z-50 overflow-hidden"
-                        style="display: none;">
+                    <div id="user-dropdown-panel"
+                        class="hidden absolute right-0 mt-2 w-52 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg z-50 overflow-hidden">
 
                         {{-- User info header --}}
                         <div class="px-4 py-3 border-b border-gray-100 dark:border-gray-800">
@@ -152,6 +149,28 @@
             <span>Customer Portal</span>
         </div>
     </footer>
+
+    <script>
+        function toggleUserDropdown() {
+            var panel   = document.getElementById('user-dropdown-panel');
+            var chevron = document.getElementById('user-dropdown-chevron');
+            if (!panel) return;
+            var isOpen = !panel.classList.contains('hidden');
+            panel.classList.toggle('hidden', isOpen);
+            chevron.style.transform = isOpen ? '' : 'rotate(180deg)';
+        }
+
+        document.addEventListener('click', function(e) {
+            var wrapper = document.getElementById('user-dropdown-wrapper');
+            var panel   = document.getElementById('user-dropdown-panel');
+            if (!wrapper || !panel) return;
+            if (!wrapper.contains(e.target)) {
+                panel.classList.add('hidden');
+                var chevron = document.getElementById('user-dropdown-chevron');
+                if (chevron) chevron.style.transform = '';
+            }
+        });
+    </script>
 
 </body>
 </html>

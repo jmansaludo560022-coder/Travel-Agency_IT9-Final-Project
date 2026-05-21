@@ -7,13 +7,30 @@
     <title>@yield('title', 'Dashboard') — TravelEase Admin</title>
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700&display=swap" rel="stylesheet" />
-    <!-- Prevent flash of wrong theme -->
+    <!-- Theme: apply saved preference immediately to prevent flash -->
     <script>
         (function() {
             const t = localStorage.getItem('theme') || 'light';
             if (t === 'dark') document.documentElement.classList.add('dark');
             else document.documentElement.classList.remove('dark');
         })();
+
+        // Global toggle — defined here so it works before app.js loads
+        window.toggleTheme = function () {
+            const next = document.documentElement.classList.contains('dark') ? 'light' : 'dark';
+            localStorage.setItem('theme', next);
+            if (next === 'dark') {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+            const sun  = document.getElementById('icon-sun');
+            const moon = document.getElementById('icon-moon');
+            if (sun && moon) {
+                sun.classList.toggle('hidden', next !== 'dark');
+                moon.classList.toggle('hidden', next === 'dark');
+            }
+        };
     </script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
