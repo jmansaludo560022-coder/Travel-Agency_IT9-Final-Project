@@ -46,13 +46,16 @@ WORKDIR /var/www/html
 # Copy Laravel app
 COPY . .
 
-# Setup .env for build step
-RUN cp .env.example .env
+# Setup .env for build step with correct APP_URL
+RUN cp .env.example .env \
+&& sed -i 's|APP_URL=http://localhost|APP_URL=https://travel-agency-it9-final-project.onrender.com|g' .env \
+&& sed -i 's|APP_ENV=local|APP_ENV=production|g' .env \
+&& sed -i 's|APP_DEBUG=true|APP_DEBUG=false|g' .env
 
 # Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader --no-interaction
 
-# Generate app key (needed before artisan commands)
+# Generate app key
 RUN php artisan key:generate --force
 
 # Install frontend dependencies and build assets
