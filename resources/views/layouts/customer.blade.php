@@ -8,7 +8,25 @@
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700&display=swap" rel="stylesheet" />
     <!-- Prevent flash of wrong theme -->
-    <script>(function(){const t=localStorage.getItem('theme')||'light';if(t==='dark')document.documentElement.classList.add('dark');else document.documentElement.classList.remove('dark');})();</script>
+    <script>
+        (function(){const t=localStorage.getItem('theme')||'light';if(t==='dark')document.documentElement.classList.add('dark');else document.documentElement.classList.remove('dark');})();
+
+        window.toggleTheme = function () {
+            var next = document.documentElement.classList.contains('dark') ? 'light' : 'dark';
+            localStorage.setItem('theme', next);
+            if (next === 'dark') {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+            var sun  = document.getElementById('icon-sun');
+            var moon = document.getElementById('icon-moon');
+            if (sun && moon) {
+                sun.classList.toggle('hidden', next !== 'dark');
+                moon.classList.toggle('hidden', next === 'dark');
+            }
+        };
+    </script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="font-sans antialiased bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-gray-100 transition-colors duration-200 flex flex-col min-h-screen">
