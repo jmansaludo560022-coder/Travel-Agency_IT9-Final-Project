@@ -2,6 +2,7 @@ FROM php:8.4-apache
 
 # Install system packages and PHP extensions
 RUN apt-get update && apt-get install -y \
+
 git \
 unzip \
 curl \
@@ -46,22 +47,11 @@ WORKDIR /var/www/html
 # Copy Laravel app
 COPY . .
 
-# Setup .env for build step with correct APP_URL
-RUN cp .env.example .env \
-&& sed -i 's|APP_URL=http://localhost|APP_URL=https://travel-agency-it9-final-project.onrender.com|g' .env \
-&& sed -i 's|APP_ENV=local|APP_ENV=production|g' .env \
-&& sed -i 's|APP_DEBUG=true|APP_DEBUG=false|g' .env
-
 # Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader --no-interaction
 
-# Generate app key
-RUN php artisan key:generate --force
-
 # Install frontend dependencies and build assets
 RUN npm install && npm run build
-
-# Clear caches
 RUN php artisan config:clear \
 && php artisan route:clear \
 && php artisan view:clear
@@ -75,7 +65,7 @@ storage/framework/views bootstrap/cache public/uploads \
 && chown -R www-data:www-data storage bootstrap/cache public/uploads \
 && chmod -R 775 storage bootstrap/cache public/uploads
 
-# Run migrations
+# (Optional) Run migrations
 RUN php artisan migrate --force || true
 
 # Expose port
@@ -83,3 +73,51 @@ EXPOSE 10000
 
 # Start Apache
 CMD ["apache2-foreground"]
+
+Create .dockerignore file copy and paste
+vendor
+
+node_modules
+
+.git
+
+to app/Providers/AppServiceProvider.php and change the code to this one.
+<?php
+
+namespace App\Providers;
+use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\URL;
+class AppServiceProvider extends ServiceProvider
+
+{
+
+/**
+
+* Register any application services.
+
+*/
+
+public function register(): void
+
+        {
+
+        //
+
+        }
+
+        /**
+
+        * Bootstrap any application services.
+
+        */
+
+public function boot(): void
+    {
+        if (env('APP_ENV') === 'production') {
+        URL::forceScheme('https');
+
+        }
+
+    }
+
+}
