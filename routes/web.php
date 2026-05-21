@@ -51,6 +51,8 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->name('admin.')->grou
 // Agent routes
 Route::prefix('agent')->middleware(['auth', 'role:agent'])->name('agent.')->group(function () {
     Route::get('/dashboard', [\App\Http\Controllers\Agent\DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/account', [\App\Http\Controllers\Agent\AccountController::class, 'edit'])->name('account.edit');
+    Route::patch('/account', [\App\Http\Controllers\Agent\AccountController::class, 'update'])->name('account.update');
     Route::resource('packages', \App\Http\Controllers\Agent\PackageController::class)->only(['index', 'show', 'create', 'store', 'edit', 'update']);
     Route::resource('bookings', \App\Http\Controllers\Agent\BookingController::class)->only(['index', 'show', 'create', 'store']);
     Route::patch('bookings/{booking}/status', [\App\Http\Controllers\Agent\BookingController::class, 'updateStatus'])->name('bookings.update-status');

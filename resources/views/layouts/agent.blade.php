@@ -72,11 +72,11 @@
                 </div>
                 <div class="flex-1 min-w-0">
                     <p class="text-sm font-medium text-gray-900 dark:text-white truncate">{{ auth()->user()->username }}</p>
-                    <p class="text-xs text-gray-400">Agent</p>
+                    <a href="{{ route('agent.account.edit') }}" class="text-xs text-sky-500 hover:text-sky-400 transition">Account Settings</a>
                 </div>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
-                    <button type="submit" class="text-gray-400 hover:text-red-500 transition">
+                    <button type="submit" title="Logout" class="text-gray-400 hover:text-red-500 transition">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
                     </button>
                 </form>
