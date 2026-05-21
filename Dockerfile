@@ -58,9 +58,9 @@ RUN composer install --no-dev --optimize-autoloader --no-interaction
 
 # Install frontend dependencies and build assets
 RUN npm install && npm run build
-RUN php artisan config:cache \
-&& php artisan route:cache \
-&& php artisan view:cache
+RUN php artisan config:clear \
+&& php artisan route:clear \
+&& php artisan view:clear
 
 # Create storage symlink
 RUN php artisan storage:link || true
