@@ -46,11 +46,14 @@ WORKDIR /var/www/html
 # Copy Laravel app
 COPY . .
 
-# Create .env from example so Laravel can bootstrap during build
-RUN cp .env.example .env && php artisan key:generate --no-interaction
+# Create .env from example BEFORE composer so Laravel can find it
+RUN cp .env.example .env
 
 # Install PHP dependencies (skip scripts to avoid artisan errors during build)
 RUN composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
+
+# Now generate app key (vendor exists now)
+RUN php artisan key:generate --no-interaction
 
 # Install frontend dependencies and build assets
 RUN npm install && npm run build
