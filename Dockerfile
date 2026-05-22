@@ -52,9 +52,6 @@ RUN cp .env.example .env
 # Install PHP dependencies (skip scripts to avoid artisan errors during build)
 RUN composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
 
-# Now generate app key (vendor exists now)
-RUN php artisan key:generate --no-interaction
-
 # Install frontend dependencies and build assets
 RUN npm install && npm run build
 
