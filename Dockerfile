@@ -46,16 +46,19 @@ WORKDIR /var/www/html
 # Copy Laravel app
 COPY . .
 
-# Install PHP dependencies
-RUN composer install --no-dev --optimize-autoloader --no-interaction
+# Create .env from example so Laravel can bootstrap during build
+RUN cp .env.example .env && php artisan key:generate --no-interaction
+
+# Install PHP dependencies (skip scripts to avoid artisan errors during build)
+RUN composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
 
 # Install frontend dependencies and build assets
 RUN npm install && npm run build
 
 # Clear and cache config
-RUN php artisan config:clear \
-    && php artisan route:clear \
-    && php artisan view:clear
+RUN php artisan config:clear || true \
+    && php artisan route:clear || true \
+    && php artisan view:clear || true
 
 # Create storage symlink
 RUN php artisan storage:link || true
